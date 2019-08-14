@@ -1,26 +1,29 @@
-var express = require('express');
 var bcrypt = require('bcrypt');
-var saltRounds = 10;
-var router = express.Router();
-var User = require('../../../models').User;
+var express = require('express');
+var uuidv4 = require('uuid/v4');
 
-router.post('/', function(req, res) {
+var User = require('../../../models').User;
+var router = express.Router();
+
+router.post('/', (request, response) => {
   User.create({
-    email: req.body.email,
-    password: req.body.password
+    email: request.body.email,
+    password: _hashedPassword(request.body.password),
+    api_key: uuidv4()
   })
   .then(user => {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(201).send(JSON.stringify(user.api_key));
+    response.setHeader('Content-Type', 'application/json');
+    response.status(201).send(JSON.stringify({ api_key: user.api_key }));
   })
   .catch(error => {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(400).send({ error: 'Failed to create user' });
+    response.setHeader('Content-Type', 'application/json');
+    response.status(400).send({ error });
   });
 });
 
-module.exports = router;
+var _hashedPassword = (password) => {
+  let saltRounds = 10;
+  return bcrypt.hashSync(password, saltRounds);
+};
 
-// bcrypt.hash(myPlaintextPassword, saltRounds).then(function(hash) {
-//     // Store hash in your password DB.
-// });
+module.exports = router;
