@@ -3,15 +3,19 @@ var request = require('supertest');
 var app = require('./app');
 
 describe('API', () => {
-  // beforeEach(() => {
-  //   shell.exec('npx sequelize db:migrate')
-  //   shell.exec('npx sequelize db:seed:all')
-  // });
-  //
-  // afterEach(() => {
-  //   shell.exec('npx sequelize db:seed:undo:all')
-  //   shell.exec('npx sequelize db:migrate:undo:all')
-  // });
+  beforeAll(() => {
+    shell.exec('npx sequelize db:create')
+  })
+
+  beforeEach(() => {
+    shell.exec('npx sequelize db:migrate')
+    shell.exec('npx sequelize db:seed:all')
+  });
+
+  afterEach(() => {
+    shell.exec('npx sequelize db:seed:undo:all')
+    shell.exec('npx sequelize db:migrate:undo:all')
+  });
 
   describe('test account creation endpoint', () => {
     test('returns an API key when correct information is passed', () => {
@@ -23,7 +27,7 @@ describe('API', () => {
         password_confirmation: 'password'
       })
       .then(response => {
-        expect(response).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(Object.keys(response.body)).toContain('api_key')
       });
     });
