@@ -1,0 +1,31 @@
+var shell = require('shelljs');
+var request = require('supertest');
+var app = require('./app');
+
+describe('API', () => {
+  // beforeEach(() => {
+  //   shell.exec('npx sequelize db:migrate')
+  //   shell.exec('npx sequelize db:seed:all')
+  // });
+  //
+  // afterEach(() => {
+  //   shell.exec('npx sequelize db:seed:undo:all')
+  //   shell.exec('npx sequelize db:migrate:undo:all')
+  // });
+
+  describe('test account creation endpoint', () => {
+    test('returns an API key when correct information is passed', () => {
+      return request(app)
+      .post('/api/v1/users')
+      .send({
+        email: 'user@example.com',
+        password: 'password',
+        password_confirmation: 'password'
+      })
+      .then(response => {
+        expect(response).toBe(200)
+        expect(Object.keys(response.body)).toContain('api_key')
+      });
+    });
+  });
+});
