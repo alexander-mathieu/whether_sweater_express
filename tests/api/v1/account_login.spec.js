@@ -12,21 +12,18 @@ var _hashedPassword = (password) => {
 
 describe('test account login endpoint', () => {
   beforeAll(() => {
-    // shell.exec('npx sequelize db:drop');
-
-    User.create({
-                 email: 'user@example.com',
-                 password: _hashedPassword('password'),
-                 api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
-                })
-  })
-
-  beforeEach(() => {
+    // shell.exec('npx sequelize db:create');
     shell.exec('npx sequelize db:migrate');
     shell.exec('npx sequelize db:seed:all');
+
+    return User.create({
+                        email: 'userlogin@example.com',
+                        password: _hashedPassword('password'),
+                        api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+                      })
   })
 
-  afterEach(() => {
+  afterAll(() => {
     shell.exec('npx sequelize db:seed:undo:all');
     shell.exec('npx sequelize db:migrate:undo:all');
   })
@@ -35,7 +32,7 @@ describe('test account login endpoint', () => {
     return request(app)
     .post('/api/v1/sessions')
     .send({
-      email: 'user@example.com',
+      email: 'userlogin@example.com',
       password: 'password'
     })
     .then(response => {
@@ -48,7 +45,7 @@ describe('test account login endpoint', () => {
     return request(app)
     .post('/api/v1/sessions')
     .send({
-      email: 'notuser@example.com',
+      email: 'notuserlogin@example.com',
       password: 'password'
     })
     .then(response => {
@@ -61,7 +58,7 @@ describe('test account login endpoint', () => {
     return request(app)
     .post('/api/v1/sessions')
     .send({
-      email: 'user@example.com',
+      email: 'userlogin@example.com',
       password: 'notpassword'
     })
     .then(response => {

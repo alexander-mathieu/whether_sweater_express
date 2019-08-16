@@ -5,16 +5,13 @@ var app = require('../../../app');
 var User = require('../../../models').User;
 
 describe('test account creation endpoint', () => {
-  // beforeAll(() => {
-  //   shell.exec('npx sequelize db:create');
-  // });
-
-  beforeEach(() => {
+  beforeAll(() => {
+    // shell.exec('npx sequelize db:create');
     shell.exec('npx sequelize db:migrate');
     shell.exec('npx sequelize db:seed:all');
-  })
+  });
 
-  afterEach(() => {
+  afterAll(() => {
     shell.exec('npx sequelize db:seed:undo:all');
     shell.exec('npx sequelize db:migrate:undo:all');
   })
@@ -23,7 +20,7 @@ describe('test account creation endpoint', () => {
     return request(app)
     .post('/api/v1/users')
     .send({
-      email: 'user@example.com',
+      email: 'usercreate@example.com',
       password: 'password',
       password_confirmation: 'password'
     })
@@ -37,7 +34,7 @@ describe('test account creation endpoint', () => {
     return request(app)
     .post('/api/v1/users')
     .send({
-      email: 'user@example.com',
+      email: 'usercreate@example.com',
       password: 'password',
       password_confirmation: 'notpassword'
     })
@@ -61,16 +58,16 @@ describe('test account creation endpoint', () => {
   })
 
   test('returns an error when email has been taken', () => {
-    let user = User.create({
-                            email: 'user@example.com',
-                            password: 'password',
-                            api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
-                           })
+    User.create({
+                 email: 'usercreate@example.com',
+                 password: 'password',
+                 api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+               })
 
     return request(app)
     .post('/api/v1/users')
     .send({
-      email: 'user@example.com',
+      email: 'usercreate@example.com',
       password: 'password',
       password_confirmation: 'password'
     })
