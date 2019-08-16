@@ -3,6 +3,7 @@ var express = require('express');
 var uuidv4 = require('uuid/v4');
 
 var User = require('../../../models').User;
+
 var router = express.Router();
 
 router.post('/', (request, response) => {
@@ -22,9 +23,9 @@ router.post('/', (request, response) => {
     .catch(error => {
       response.setHeader('Content-Type', 'application/json');
       response.status(400).send({ error: error });
-    });
-  };
-});
+    })
+  }
+})
 
 var _hashedPassword = (password) => {
   let saltRounds = 10;
