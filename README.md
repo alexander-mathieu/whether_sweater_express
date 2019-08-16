@@ -8,7 +8,6 @@ Welcome to _Whether, Sweater? Express_! This is a [Turing School of Software & D
 
 ## Endpoints
 
-```
 ### POST /api/v1/users
 
 Creates a user account, using an email, password, and password_confirmation passed in as form data in the body of the request.
