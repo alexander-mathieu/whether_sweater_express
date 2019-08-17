@@ -28,6 +28,13 @@ describe('test forecast endpoint', () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(Object.keys(response.body)).toContain('data');
+        expect(Object.keys(response.body.data)).toContain('location');
+        expect(Object.keys(response.body.data)).toContain('currently');
+        expect(Object.keys(response.body.data)).toContain('hourly');
+        expect(Object.keys(response.body.data)).toContain('daily');
+
+        expect(response.body.data.hourly.count).toEql(8);
+        expect(response.body.data.daily.count).toEql(7);
       })
     })
   })
