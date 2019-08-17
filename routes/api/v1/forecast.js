@@ -36,7 +36,6 @@ router.get('/', (request, response) => {
         response.status(200).send(JSON.stringify({ data: new forecastSerializer(request.query.location, data) }))
       })
       .catch(error => {
-        console.log(error)
         response.setHeader('Content-Type', 'application/json');
         response.status(500).send(JSON.stringify({ error: error }))
       })
