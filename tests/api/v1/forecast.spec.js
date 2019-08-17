@@ -7,31 +7,28 @@ var User = require('../../../models').User;
 
 describe('test forecast endpoint', () => {
   beforeAll(() => {
-    // shell.exec('npx sequelize db:create');
+    shell.exec('npx sequelize db:drop')
+    shell.exec('npx sequelize db:create');
     shell.exec('npx sequelize db:migrate');
     shell.exec('npx sequelize db:seed:all');
-
-    return User.create({
-                        email: 'forecast@example.com',
-                        password: 'password',
-                        apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
-                      })
-  })
-
-  afterAll(() => {
-    shell.exec('npx sequelize db:seed:undo:all');
-    shell.exec('npx sequelize db:migrate:undo:all');
   })
 
   test('returns an forecast when valid API key is passed', () => {
-    return request(app)
-    .get('/api/v1/forecast?location=denver,co')
-    .send({
-      api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+    User.create({
+      email: 'forecast@example.com',
+      password: 'password',
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
-    .then(response => {
-      expect(response.statusCode).toBe(200);
-      expect(Object.keys(response.body)).toContain('data');
+    .then(user => {
+      request(app)
+      .get('/api/v1/forecast?location=denver,co')
+      .send({
+        api_key: user.apiKey
+      })
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(Object.keys(response.body)).toContain('data');
+      })
     })
   })
 
