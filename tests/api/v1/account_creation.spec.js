@@ -61,7 +61,7 @@ describe('test account creation endpoint', () => {
     User.create({
                  email: 'usercreate@example.com',
                  password: 'password',
-                 api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+                 apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
                })
 
     return request(app)

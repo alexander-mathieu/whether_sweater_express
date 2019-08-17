@@ -19,7 +19,7 @@ describe('test account login endpoint', () => {
     return User.create({
                         email: 'userlogin@example.com',
                         password: _hashedPassword('password'),
-                        api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+                        apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
                       })
   })
 
