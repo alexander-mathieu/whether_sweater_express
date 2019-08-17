@@ -12,61 +12,69 @@ var _hashedPassword = (password) => {
 
 describe('test account login endpoint', () => {
   beforeAll(() => {
-    // shell.exec('npx sequelize db:drop');
-
-    User.create({
-                 email: 'user@example.com',
-                 password: _hashedPassword('password'),
-                 api_key: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
-                })
-  })
-
-  beforeEach(() => {
+    shell.exec('npx sequelize db:drop');
+    shell.exec('npx sequelize db:create');
     shell.exec('npx sequelize db:migrate');
     shell.exec('npx sequelize db:seed:all');
   })
 
-  afterEach(() => {
-    shell.exec('npx sequelize db:seed:undo:all');
-    shell.exec('npx sequelize db:migrate:undo:all');
-  })
-
   test('returns an API key when correct information is passed', () => {
-    return request(app)
-    .post('/api/v1/sessions')
-    .send({
-      email: 'user@example.com',
-      password: 'password'
+    User.create({
+      email: 'userlogin1@example.com',
+      password: _hashedPassword('password'),
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
-    .then(response => {
-      expect(response.statusCode).toBe(200);
-      expect(Object.keys(response.body)).toContain('api_key');
+    .then(user => {
+      request(app)
+      .post('/api/v1/sessions')
+      .send({
+        email: user.email,
+        password: user.password
+      })
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(Object.keys(response.body)).toContain('api_key');
+      })
     })
   })
 
   test('returns an error when incorrect email is sent', () => {
-    return request(app)
-    .post('/api/v1/sessions')
-    .send({
-      email: 'notuser@example.com',
-      password: 'password'
+    User.create({
+      email: 'userlogin2@example.com',
+      password: _hashedPassword('password'),
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
-    .then(response => {
-      expect(response.statusCode).toBe(401);
-      expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+    .then(user => {
+      request(app)
+      .post('/api/v1/sessions')
+      .send({
+        email: 'notuserlogin@example.com',
+        password: user.password
+      })
+      .then(response => {
+        expect(response.statusCode).toBe(401);
+        expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+      })
     })
   })
 
   test('returns an error when incorrect password is sent', () => {
-    return request(app)
-    .post('/api/v1/sessions')
-    .send({
-      email: 'user@example.com',
-      password: 'notpassword'
+    User.create({
+      email: 'user3login@example.com',
+      password: _hashedPassword('password'),
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
-    .then(response => {
-      expect(response.statusCode).toBe(401);
-      expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+    .then(user => {
+      request(app)
+      .post('/api/v1/sessions')
+      .send({
+        email: user.email,
+        password: 'notuserpassword'
+      })
+      .then(response => {
+        expect(response.statusCode).toBe(401);
+        expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+      })
     })
   })
 })
