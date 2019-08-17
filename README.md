@@ -28,7 +28,7 @@ body:
 Example of expected output:
 ```
 {
-    "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+  "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
 }
 ```
 
@@ -51,7 +51,7 @@ body:
 Example of expected output:
 ```
 {
-    "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+  "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
 }
 ```
 
