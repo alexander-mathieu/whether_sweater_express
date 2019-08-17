@@ -4,6 +4,7 @@ var express = require('express');
 var fetch = require('node-fetch');
 
 var User = require('../../../models').User;
+var forecastSerializer = require('../../../serializers/forecast_serializer')
 
 var router = express.Router();
 
@@ -19,37 +20,26 @@ router.get('/', (request, response) => {
       .then(response => {
         return response.json();
       })
-        .then(data => {
-          let latLong = data['results'][0]['geometry']['location'];
-          let formattedLatLong = _formatLatLong(latLong);
-          return formattedLatLong
-        })
-          .then(formattedLatLong => {
-            return fetch(`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${formattedLatLong}`)
-          })
-            .then(response => {
-              return response.json();
-            })
-              .then(data => {
-                response.setHeader('Content-Type', 'application/json');
-                response.status(200).send(JSON.stringify({ data: data }))
-              })
-              .catch(error => {
-                response.setHeader('Content-Type', 'application/json');
-                response.status(500).send(JSON.stringify({ error: error }))
-              })
-            .catch(error => {
-              response.setHeader('Content-Type', 'application/json');
-              response.status(500).send(JSON.stringify({ error: error }))
-            })
-          .catch(error => {
-            response.setHeader('Content-Type', 'application/json');
-            response.status(500).send(JSON.stringify({ error: error }))
-          })
-        .catch(error => {
-          response.setHeader('Content-Type', 'application/json');
-          response.status(500).send(JSON.stringify({ error: error }))
-        })
+      .then(data => {
+        let latLong = data.results[0].geometry.location;
+        let formattedLatLong = _formatLatLong(latLong);
+        return formattedLatLong
+      })
+      .then(formattedLatLong => {
+        return fetch(`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${formattedLatLong}`)
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        response.setHeader('Content-Type', 'application/json');
+        response.status(200).send(JSON.stringify({ data: new forecastSerializer(request.query.location, data) }))
+      })
+      .catch(error => {
+        console.log(error)
+        response.setHeader('Content-Type', 'application/json');
+        response.status(500).send(JSON.stringify({ error: error }))
+      })
     } else {
       response.setHeader('Content-Type', 'application/json');
       response.status(401).send(JSON.stringify({ error: 'API key is incorrect.' }))
@@ -77,7 +67,7 @@ var _retrieveForcast = (formattedLatLong) => {
 }
 
 var _formatLatLong = (latLong) => {
-  return (String(latLong['lat']) + ',' + String(latLong['lng']));
+  return (String(latLong.lat) + ',' + String(latLong.lng));
 }
 
 var _retrieveLatLong = (location) => {
