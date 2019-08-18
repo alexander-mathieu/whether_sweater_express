@@ -301,8 +301,8 @@ $ npx db:migrate
 ```
 
 Additionally, you'll need:
-* A [Dark Sky api key](https://darksky.net/dev/), and have it defined within
-* A [Google api key](https://developers.google.com/maps/documentation/embed/get-api-key/), and have it defined within
+* A [DARKSKY_API_KEY](https://darksky.net/dev/), and have it defined within a file in the root directory named `.env`.
+* A [GOOGLE_MAPS_API_KEY](https://developers.google.com/maps/documentation/embed/get-api-key/), and have it defined within a file in the root directory named `.env`.
 
 ### API Exploration
 
