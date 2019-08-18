@@ -29,8 +29,20 @@ describe('favorite locations endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(201);
-      expect(Object.keys(response.body)).toContain('message');
-      expect(Object.values(response.body.message)).toContain('Denver, CO has been added to your favorites')
+      expect(response.body.message).toEqual('Denver, CO has been added to your favorites.');
+    })
+  })
+
+  test('returns an error when incorrect API key is sent', () => {
+    return request(app)
+    .post('/api/v1/favorites')
+    .send({
+      'location': 'Denver, CO',
+      'api_key': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+    })
+    .then(response => {
+      expect(response.statusCode).toBe(401);
+      expect(response.body.error).toEqual('API key is incorrect.');
     })
   })
 })

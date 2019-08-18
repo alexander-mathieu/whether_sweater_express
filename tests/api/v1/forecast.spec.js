@@ -47,7 +47,7 @@ describe('test forecast endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(401);
-      expect(Object.values(response.body)).toContain('API key is incorrect.');
+      expect(response.body.error).toEqual('API key is incorrect.');
     })
   })
 })

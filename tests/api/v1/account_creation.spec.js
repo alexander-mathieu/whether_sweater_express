@@ -36,7 +36,7 @@ describe('test account creation endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(400);
-      expect(Object.values(response.body)).toContain("Passwords don't match!");
+      expect(response.body.error).toEqual("Passwords don't match!");
     })
   })
 

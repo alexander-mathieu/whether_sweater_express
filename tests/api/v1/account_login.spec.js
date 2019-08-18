@@ -34,7 +34,7 @@ describe('test account login endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(200);
-      expect(Object.keys(response.body)).toContain('api_key');
+      expect(response.body.api_key).toEqual('11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000');
     })
   })
 
@@ -54,7 +54,7 @@ describe('test account login endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(401);
-      expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+      expect(response.body.error).toEqual('Email or password is incorrect.');
     })
   })
 
@@ -74,7 +74,7 @@ describe('test account login endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(401);
-      expect(Object.values(response.body)).toContain('Email or password is incorrect.');
+      expect(response.body.error).toEqual('Email or password is incorrect.');
     })
   })
 })
