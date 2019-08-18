@@ -50,7 +50,25 @@ describe('favorite locations endpoint', () => {
     return User.create({
       email: 'userfavorites2@example.com',
       password: 'password',
-      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc002',
+      locations: [
+        {
+          city: 'Denver',
+          state: 'CO'
+        },
+        {
+          city: 'Derry',
+          state: 'NH'
+        },
+        {
+          city: 'Boston',
+          state: 'MA'
+        }
+      ],
+    }, {
+      include: {
+        association: 'locations'
+      }
     })
     .then(user => {
       return request(app)
@@ -61,7 +79,9 @@ describe('favorite locations endpoint', () => {
     })
     .then(response => {
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toEqual('list');
+      expect(response.body.data.length).toEqual(3);
+      expect(Object.keys(response.body.data[0])).toContain('location');
+      expect(Object.keys(response.body.data[0])).toContain('currently');
     })
   })
 
