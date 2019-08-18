@@ -6,6 +6,11 @@
     "start": "node ./bin/www",
     "test": "jest --coverage --watch"
   },
+  "jest": {
+    "maxConcurrency": 1,
+    "globalSetup": "./tests/helpers/testGlobalSetup.js",
+    "globalTeardown": "./tests/helpers/testGlobalTeardown.js"
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "cookie-parser": "~1.4.4",
