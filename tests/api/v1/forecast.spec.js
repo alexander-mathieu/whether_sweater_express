@@ -6,15 +6,8 @@ var app = require('../../../app');
 var User = require('../../../models').User;
 
 describe('test forecast endpoint', () => {
-  beforeAll(() => {
-    shell.exec('npx sequelize db:drop')
-    shell.exec('npx sequelize db:create');
-    shell.exec('npx sequelize db:migrate');
-    shell.exec('npx sequelize db:seed:all');
-  })
-
   test('returns an forecast when valid API key is passed', () => {
-    User.create({
+    return User.create({
       email: 'forecast@example.com',
       password: 'password',
       apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'

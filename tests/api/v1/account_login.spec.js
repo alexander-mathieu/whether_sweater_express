@@ -11,13 +11,6 @@ var _hashedPassword = (password) => {
 };
 
 describe('test account login endpoint', () => {
-  beforeAll(() => {
-    shell.exec('npx sequelize db:drop');
-    shell.exec('npx sequelize db:create');
-    shell.exec('npx sequelize db:migrate');
-    shell.exec('npx sequelize db:seed:all');
-  })
-
   test('returns an API key when correct information is passed', () => {
     return User.create({
       email: 'userlogin1@example.com',
