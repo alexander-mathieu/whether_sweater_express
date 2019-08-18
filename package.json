@@ -6,10 +6,16 @@
     "start": "node ./bin/www",
     "test": "jest --coverage --watch"
   },
+  "jest": {
+    "maxConcurrency": 1,
+    "globalSetup": "./tests/helpers/testGlobalSetup.js",
+    "globalTeardown": "./tests/helpers/testGlobalTeardown.js"
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^8.0.0",
     "express": "~4.16.1",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
@@ -20,7 +26,6 @@
   },
   "devDependencies": {
     "babel-jest": "^24.8.0",
-    "dotenv": "^8.0.0",
     "shelljs": "^0.8.3",
     "supertest": "^4.0.2"
   }

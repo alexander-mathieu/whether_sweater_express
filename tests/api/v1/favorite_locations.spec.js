@@ -6,13 +6,6 @@ var User = require('../../../models').User;
 var Location = require('../../../models').Location;
 
 describe('favorite locations endpoint', () => {
-  beforeAll(() => {
-    shell.exec('npx sequelize db:drop');
-    shell.exec('npx sequelize db:create');
-    shell.exec('npx sequelize db:migrate');
-    shell.exec('npx sequelize db:seed:all');
-  })
-
   test('creates a new favorite location when a valid API key is sent', () => {
     return User.create({
       email: 'userfavorites1@example.com',

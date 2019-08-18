@@ -5,13 +5,6 @@ var app = require('../../../app');
 var User = require('../../../models').User;
 
 describe('test account creation endpoint', () => {
-  beforeAll(() => {
-    shell.exec('npx sequelize db:drop');
-    shell.exec('npx sequelize db:create');
-    shell.exec('npx sequelize db:migrate');
-    shell.exec('npx sequelize db:seed:all');
-  });
-
   test('returns an API key when correct information is passed', () => {
     return request(app)
     .post('/api/v1/users')
