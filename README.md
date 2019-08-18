@@ -314,3 +314,12 @@ Once installation and database setup are complete, explore the various API endpo
 ### Running Tests
 
 Tests are implemnted with Jest, and can be run with `$ npm test`.
+
+Example of expected output:
+```
+Test Suites: 4 passed, 4 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        4.725s
+Ran all test suites.
+```
