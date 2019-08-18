@@ -16,7 +16,7 @@ describe('test account creation endpoint', () => {
     return request(app)
     .post('/api/v1/users')
     .send({
-      email: 'usercreate@example.com',
+      email: 'usercreate1@example.com',
       password: 'password',
       password_confirmation: 'password'
     })
@@ -30,13 +30,13 @@ describe('test account creation endpoint', () => {
     return request(app)
     .post('/api/v1/users')
     .send({
-      email: 'usercreate@example.com',
+      email: 'usercreate2@example.com',
       password: 'password',
       password_confirmation: 'notpassword'
     })
     .then(response => {
       expect(response.statusCode).toBe(400);
-      expect(Object.values(response.body)).toContain("Passwords don't match!");
+      expect(response.body.error).toEqual("Passwords don't match!");
     })
   })
 
@@ -54,23 +54,23 @@ describe('test account creation endpoint', () => {
   })
 
   test('returns an error when email has been taken', () => {
-    User.create({
-      email: 'usercreate@example.com',
+    return User.create({
+      email: 'usercreate4@example.com',
       password: 'password',
       apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
     .then(user => {
-     request(app)
-     .post('/api/v1/users')
-     .send({
-       email: user.email,
-       password: 'password',
-       password_confirmation: 'password'
-     })
-     .then(response => {
-       expect(response.statusCode).toBe(400);
-       expect(Object.keys(response.body)).toContain('error');
-     })
+      return request(app)
+      .post('/api/v1/users')
+      .send({
+        email: user.email,
+        password: 'password',
+        password_confirmation: 'password'
+      })
+    })
+    .then(response => {
+      expect(response.statusCode).toBe(400);
+      expect(Object.keys(response.body)).toContain('error');
     })
   })
 })
