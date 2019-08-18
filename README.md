@@ -187,6 +187,77 @@ Example of expected output:
 }
 ```
 
+### GET /api/v1/favorites
+
+Lists the current weather for all of a user's favorite locations.
+
+Request:
+```
+Content-Type: application/json
+Accept: application/json
+
+body:
+{
+  "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+}
+```
+
+Example of expected output:
+```
+{
+    "data": [
+        {
+            "location": "pueblo,co",
+            "currently": {
+                "time": 1566157171,
+                "summary": "Clear",
+                "icon": "clear-day",
+                "nearestStormDistance": 276,
+                "nearestStormBearing": 97,
+                "precipIntensity": 0,
+                "precipProbability": 0,
+                "temperature": 93.66,
+                "apparentTemperature": 93.66,
+                "dewPoint": 39.23,
+                "humidity": 0.15,
+                "pressure": 1007.47,
+                "windSpeed": 8.63,
+                "windGust": 12.45,
+                "windBearing": 135,
+                "cloudCover": 0.01,
+                "uvIndex": 10,
+                "visibility": 10,
+                "ozone": 292.2
+            }
+        },
+        {
+            "location": "denver,co",
+            "currently": {
+                "time": 1566157171,
+                "summary": "Partly Cloudy",
+                "icon": "partly-cloudy-day",
+                "nearestStormDistance": 323,
+                "nearestStormBearing": 115,
+                "precipIntensity": 0,
+                "precipProbability": 0,
+                "temperature": 78.89,
+                "apparentTemperature": 78.89,
+                "dewPoint": 48.73,
+                "humidity": 0.35,
+                "pressure": 1009.42,
+                "windSpeed": 4.5,
+                "windGust": 6.24,
+                "windBearing": 53,
+                "cloudCover": 0.14,
+                "uvIndex": 9,
+                "visibility": 10,
+                "ozone": 291.5
+            }
+        }
+    ]
+}
+```
+
 ## Local Installation
 
 ### Requirements
