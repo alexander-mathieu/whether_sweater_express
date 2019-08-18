@@ -258,6 +258,27 @@ Example of expected output:
 }
 ```
 
+### DELETE /api/v1/favorites
+
+Deletes a favorite location for a user.
+
+Request:
+```
+Content-Type: application/json
+Accept: application/json
+
+body:
+{
+  "location": "Denver, CO",
+  "api_key": "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000"
+}
+```
+
+Example of expected output:
+```
+status: 204
+```
+
 ## Local Installation
 
 ### Requirements
