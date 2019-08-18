@@ -86,6 +86,39 @@ router.get('/', (request, response) => {
   })
 })
 
+router.delete('/', (request, response) => {
+  return User.findOne({
+    where: {
+      apiKey: request.body.api_key
+    }
+  })
+  .then(user => {
+    if (user) {
+      let cityState = _splitLocation(request.body.location);
+
+      return Location.destroy({
+        where: {
+          UserId: user.id,
+          city: cityState[0],
+          state: cityState[1]
+        }
+      })
+      .then(location => {
+        response.setHeader('Content-Type', 'application/json');
+        response.status(204).send(JSON.stringify({ location: location}));
+
+      })
+      .catch(error => {
+        response.setHeader('Content-Type', 'application/json');
+        response.status(500).send({ error });
+      })
+    } else {
+      response.setHeader('Content-Type', 'application/json');
+      response.status(401).send(JSON.stringify({ error: 'API key is incorrect.' }));
+    }
+  })
+})
+
 var _splitLocation = (location) => {
   let cityState = location.split(', ');
   return cityState;

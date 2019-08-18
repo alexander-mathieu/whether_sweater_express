@@ -33,7 +33,7 @@ describe('favorite locations endpoint', () => {
     })
   })
 
-  test('does not create a new favorite location when incorrect API key is sent', () => {
+  test('does not create a new favorite location when invalid API key is sent', () => {
     return request(app)
     .post('/api/v1/favorites')
     .send({
@@ -85,9 +85,58 @@ describe('favorite locations endpoint', () => {
     })
   })
 
-  test('does not return a list of favorite locations and current weather when incorrect API key is sent', () => {
+  test('does not return a list of favorite locations and current weather when invalid API key is sent', () => {
     return request(app)
     .get('/api/v1/favorites')
+    .send({
+      api_key: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+    })
+    .then(response => {
+      expect(response.statusCode).toBe(401);
+      expect(response.body.error).toEqual('API key is incorrect.');
+    })
+  })
+
+  test('deletes a favorite location when valid API key is sent', () => {
+    return User.create({
+      email: 'userfavorites3@example.com',
+      password: 'password',
+      apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc003',
+      locations: [
+        {
+          city: 'Denver',
+          state: 'CO'
+        },
+        {
+          city: 'Derry',
+          state: 'NH'
+        },
+        {
+          city: 'Boston',
+          state: 'MA'
+        }
+      ],
+    }, {
+      include: {
+        association: 'locations'
+      }
+    })
+    .then(user => {
+      return request(app)
+      .delete('/api/v1/favorites')
+      .send({
+        location: 'Denver, CO',
+        api_key: user.apiKey
+      })
+    })
+    .then(response => {
+      expect(response.statusCode).toBe(204);
+    })
+  })
+
+  test('does not delete favorite location when invalid API key is sent', () => {
+    return request(app)
+    .delete('/api/v1/favorites')
     .send({
       api_key: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
     })
