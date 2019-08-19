@@ -1,5 +1,4 @@
 var express = require('express');
-var fetch = require('node-fetch');
 
 var User = require('../../../models').User;
 
@@ -17,12 +16,12 @@ router.get('/', (request, response) => {
   })
   .then(user => {
     if (user) {
-      googleMapsService = new googleMapsService(request.query.location);
-      formattedLatLong = googleMapsService.retrieveFormattedLatLong();
+      let _googleMapsService = new googleMapsService(request.query.location);
+      let formattedLatLong = _googleMapsService.retrieveFormattedLatLong();
       return formattedLatLong
       .then(formattedLatLong => {
-        darkskyService = new darkskyService(formattedLatLong);
-        forcastData = darkskyService.retrieveForcastData();
+        let _darkskyService = new darkskyService(formattedLatLong);
+        let forcastData = _darkskyService.retrieveForcastData();
         return forcastData
       })
       .then(forecastData => {

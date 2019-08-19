@@ -1,8 +1,10 @@
 var express = require('express');
-var fetch = require('node-fetch');
 
 var User = require('../../../models').User;
 var Location = require('../../../models').Location;
+
+var darkskyService = require('../../../services/darksky_service')
+var googleMapsService = require('../../../services/google_maps_service')
 
 var router = express.Router();
 
@@ -43,31 +45,20 @@ router.get('/', (request, response) => {
       return user.getLocations()
       .then(locations => {
         let allLocationWeather = []
-
         locations.forEach(location => {
-          let formattedLocation = _formatLocation(location)
-
-          fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_MAPS_API_KEY}&address=${formattedLocation}`)
-          .then(response => {
-            return response.json();
-          })
-          .then(data => {
-            let latLong = data.results[0].geometry.location;
-            let formattedLatLong = _formatLatLong(latLong);
-            return formattedLatLong
-          })
+          let formattedLocation = _formatLocation(location);
+          let _googleMapsService = new googleMapsService(formattedLocation);
+          let formattedLatLong = _googleMapsService.retrieveFormattedLatLong();
+          return formattedLatLong
           .then(formattedLatLong => {
-            return fetch(`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${formattedLatLong}`)
+            let _darkskyService = new darkskyService(formattedLatLong);
+            let forcastData = _darkskyService.retrieveForcastData();
+            return forcastData
           })
-          .then(response => {
-            return response.json();
-          })
-          .then(data => {
+          .then(forecastData => {
             let locationWeather = {};
-
             locationWeather.location = formattedLocation;
-            locationWeather.currently = data.currently;
-
+            locationWeather.currently = forecastData.currently;
             allLocationWeather.push(locationWeather);
 
             if (allLocationWeather.length == locations.length) {
@@ -126,10 +117,6 @@ var _formatLocation = (location) => {
   let combinedLocation =  String(location.city) + ',' + String(location.state);
   let formattedLocation = combinedLocation.toLowerCase();
   return formattedLocation
-}
-
-var _formatLatLong = (latLong) => {
-  return (String(latLong.lat) + ',' + String(latLong.lng));
 }
 
 module.exports = router;
