@@ -6,6 +6,10 @@
 
 Welcome to _Whether, Sweater? Express_! This is a [Turing School of Software & Design](https://turing.io/) project completed during Module 4 of the backend engineering program. _Whether, Sweater? Express_ is a remake of Whether, Sweater? using Node, Express, Sequelize.  It exposes endpoints that produce weather data for specific locations, meant to be consumed by a hypothetical front end, pictured above.
 
+The deployed site's endpoints can be consumed at:
+
+https://whether-sweater-express-js.herokuapp.com/
+
 ## Endpoints
 
 ### POST /api/v1/users
