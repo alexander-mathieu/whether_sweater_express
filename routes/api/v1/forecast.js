@@ -1,9 +1,10 @@
-require('dotenv').config();
-
 var express = require('express');
 var fetch = require('node-fetch');
 
 var User = require('../../../models').User;
+
+var darkskyService = require('../../../services/darksky_service')
+var googleMapsService = require('../../../services/google_maps_service')
 var forecastSerializer = require('../../../serializers/forecast_serializer')
 
 var router = express.Router();
@@ -16,24 +17,17 @@ router.get('/', (request, response) => {
   })
   .then(user => {
     if (user) {
-      fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_MAPS_API_KEY}&address=${request.query.location}`)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        let latLong = data.results[0].geometry.location;
-        let formattedLatLong = _formatLatLong(latLong);
-        return formattedLatLong
-      })
+      googleMapsService = new googleMapsService(request.query.location);
+      formattedLatLong = googleMapsService.retrieveFormattedLatLong();
+      return formattedLatLong
       .then(formattedLatLong => {
-        return fetch(`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${formattedLatLong}`)
+        darkskyService = new darkskyService(formattedLatLong);
+        forcastData = darkskyService.retrieveForcastData();
+        return forcastData
       })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
+      .then(forecastData => {
         response.setHeader('Content-Type', 'application/json');
-        response.status(200).send(JSON.stringify({ data: new forecastSerializer(request.query.location, data) }))
+        response.status(200).send(JSON.stringify({ data: new forecastSerializer(request.query.location, forecastData) }))
       })
       .catch(error => {
         response.setHeader('Content-Type', 'application/json');
@@ -45,47 +39,5 @@ router.get('/', (request, response) => {
     }
   })
 })
-
-var _retrieveForcast = (formattedLatLong) => {
-  // fetch(`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${formattedLatLong}`)
-  // .then(response => {
-  //   return response.json();
-  // })
-  //   .then(data => {
-  //     response.setHeader('Content-Type', 'application/json');
-  //     response.status(200).send(JSON.stringify({ data: data }))
-  //   })
-  //   .catch(error => {
-  //     response.setHeader('Content-Type', 'application/json');
-  //     response.status(500).send(JSON.stringify({ error: error }))
-  //   })
-  // .catch(error => {
-  //   response.setHeader('Content-Type', 'application/json');
-  //   response.status(500).send(JSON.stringify({ error: error }))
-  // })
-}
-
-var _formatLatLong = (latLong) => {
-  return (String(latLong.lat) + ',' + String(latLong.lng));
-}
-
-var _retrieveLatLong = (location) => {
-  // fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_MAPS_API_KEY}&address=${location}`)
-  // .then(response => {
-  //   return response.json();
-  // })
-  //   .then(data => {
-  //     response.setHeader('Content-Type', 'application/json');
-  //     response.status(200).send(JSON.stringify({ data: data['results'][0]['geometry']['location'] }))
-  //   })
-  //   .catch(error => {
-  //     response.setHeader('Content-Type', 'application/json');
-  //     response.status(500).send(JSON.stringify({ error: error }))
-  //   })
-  // .catch(error => {
-  //   response.setHeader('Content-Type', 'application/json');
-  //   response.status(500).send(JSON.stringify({ error: error }))
-  // })
-}
 
 module.exports = router;

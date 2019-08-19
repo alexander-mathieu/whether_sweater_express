@@ -13,7 +13,7 @@ describe('test forecast endpoint', () => {
       apiKey: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000'
     })
     .then(user => {
-      request(app)
+      return request(app)
       .get('/api/v1/forecast?location=denver,co')
       .send({
         api_key: user.apiKey
@@ -26,8 +26,8 @@ describe('test forecast endpoint', () => {
         expect(Object.keys(response.body.data)).toContain('hourly');
         expect(Object.keys(response.body.data)).toContain('daily');
 
-        expect(response.body.data.hourly.count).toEql(8);
-        expect(response.body.data.daily.count).toEql(7);
+        expect(response.body.data.hourly.length).toEqual(8);
+        expect(response.body.data.daily.length).toEqual(7);
       })
     })
   })
