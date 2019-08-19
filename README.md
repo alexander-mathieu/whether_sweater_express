@@ -317,7 +317,7 @@ Once installation and database setup are complete, explore the various API endpo
 
 ### Running Tests
 
-Tests are implemnted with Jest, and can be run with `$ npm test`.
+Tests are implemented with Jest, and can be run with `$ npm test`.
 
 Example of expected output:
 ```
